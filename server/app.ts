@@ -53,10 +53,10 @@ app.post("/api/contact", async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // use TLS
+      service: "gmail",
       auth: { user: emailUser, pass: emailPass },
+      connectionTimeout: 5000,
+      socketTimeout: 5000,
     });
 
     await transporter.sendMail({
@@ -76,7 +76,7 @@ app.post("/api/contact", async (req, res) => {
     res.json({ success: true });
   } catch (err: any) {
     console.error("Email error:", err.message);
-    res.status(500).json({ error: "Erreur lors de l'envoi de l'email" });
+    res.status(500).json({ error: "Erreur lors de l'envoi de l'email", details: err.message });
   }
 });
 
