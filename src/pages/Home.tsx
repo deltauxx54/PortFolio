@@ -41,6 +41,7 @@ export const Home: React.FC<HomeProps> = ({ data, containerVariants, itemVariant
   const [formError, setFormError] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
   const [selectedTech, setSelectedTech] = useState<any | null>(null);
+  const [secretClicks, setSecretClicks] = useState(0);
 
   React.useEffect(() => {
     if (window.location.hash) {
@@ -236,8 +237,23 @@ export const Home: React.FC<HomeProps> = ({ data, containerVariants, itemVariant
               <div className="absolute inset-[36%] rounded-full border border-white/5" />
               
               {/* Center Element */}
-              <div className="z-10 w-16 h-16 md:w-24 md:h-24 glass rounded-full flex items-center justify-center border-2" style={{ borderColor: data.colors.primary, boxShadow: `0 0 40px ${data.colors.primary}66` }}>
-                <Terminal className="w-8 h-8 md:w-12 md:h-12" style={{ color: data.colors.primary }} />
+              <div 
+                onClick={() => {
+                  setSecretClicks(prev => {
+                    const next = prev + 1;
+                    if (next >= 5) {
+                      localStorage.setItem("device_authorized", "true");
+                      alert("🔒 Machine Christian autorisée avec succès ! Vous pouvez maintenant ouvrir la console d'administration avec la combinaison Ctrl + Shift + A.");
+                      return 0;
+                    }
+                    return next;
+                  });
+                }}
+                className="z-10 w-16 h-16 md:w-24 md:h-24 glass rounded-full flex items-center justify-center border-2 cursor-pointer transition-all active:scale-95" 
+                style={{ borderColor: data.colors.primary, boxShadow: `0 0 40px ${data.colors.primary}66` }}
+                title="Christian Secret Area"
+              >
+                <Terminal className="w-8 h-8 md:w-12 md:h-12 animate-pulse" style={{ color: data.colors.primary }} />
               </div>
 
               {/* Orbiting Elements */}
