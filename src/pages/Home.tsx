@@ -4,7 +4,7 @@ import {
   ChevronRight, Github, Linkedin, Mail, Briefcase,
   GraduationCap, CheckCircle2, Layout, Smartphone,
   Server, Coffee, Terminal, ExternalLink, Settings,
-  Send, User, MessageSquare, Loader2
+  Send, User, MessageSquare, Loader2, Twitter
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { sendContactEmail } from "../lib/api";
@@ -17,6 +17,22 @@ interface HomeProps {
 }
 
 const FallbackIcon: React.FC<{ slug: string; platform: string; color?: string }> = ({ slug, platform, color = "white" }) => {
+  const normalized = platform.toLowerCase().trim();
+  const iconStyle = { color };
+
+  if (normalized === "linkedin") {
+    return <Linkedin className="w-5 h-5" style={iconStyle} />;
+  }
+  if (normalized === "github") {
+    return <Github className="w-5 h-5" style={iconStyle} />;
+  }
+  if (normalized === "twitter" || normalized === "x") {
+    return <Twitter className="w-5 h-5" style={iconStyle} />;
+  }
+  if (normalized === "email" || normalized === "mail") {
+    return <Mail className="w-5 h-5" style={iconStyle} />;
+  }
+
   const [error, setError] = React.useState(false);
   
   if (error || !slug) {

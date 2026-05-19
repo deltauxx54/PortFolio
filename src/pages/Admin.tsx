@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
-import { Settings, Terminal, Plus, Trash2, Download, Upload } from "lucide-react";
+import { Settings, Terminal, Plus, Trash2, Download, Upload, Github, Linkedin, Twitter, Mail } from "lucide-react";
 
 interface AdminProps {
   data: any;
@@ -489,18 +489,37 @@ export const Admin: React.FC<AdminProps> = ({ data, updateData, updateColor, han
                   <button onClick={() => updateData("socials", [...(Array.isArray(data.socials) ? data.socials : []), { platform: "Nouveau", url: "", slug: "github" }])} className="p-1.5 glass rounded-lg text-purple-400 hover:bg-white/5"><Plus className="w-4 h-4" /></button>
                 </div>
                 <div className="space-y-3">
-                  {(Array.isArray(data.socials) ? data.socials : []).map((social: any, i: number) => (
-                    <div key={i} className="p-3 rounded-lg border border-white/5 relative">
-                      <button onClick={() => updateData("socials", data.socials.filter((_: any, idx: number) => idx !== i))} className="absolute top-2 right-2 text-red-500 hover:text-red-400"><Trash2 className="w-3 h-3" /></button>
-                      <div className="flex items-center gap-2 mb-2">
-                        <img src={`https://cdn.simpleicons.org/${social.slug.toLowerCase()}/white`} alt={social.platform} className="w-4 h-4 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                        <span className="font-bold text-xs">{social.platform}</span>
+                  {(Array.isArray(data.socials) ? data.socials : []).map((social: any, i: number) => {
+                    const renderSocialIcon = (platform: string, slug: string) => {
+                      const normalized = platform.toLowerCase().trim();
+                      const className = "w-4 h-4 text-purple-400";
+                      if (normalized === "linkedin") return <Linkedin className={className} />;
+                      if (normalized === "github") return <Github className={className} />;
+                      if (normalized === "twitter" || normalized === "x") return <Twitter className={className} />;
+                      if (normalized === "email" || normalized === "mail") return <Mail className={className} />;
+                      return (
+                        <img 
+                          src={`https://cdn.simpleicons.org/${slug.toLowerCase()}/white`} 
+                          alt={platform} 
+                          className="w-4 h-4 object-contain" 
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                        />
+                      );
+                    };
+
+                    return (
+                      <div key={i} className="p-3 rounded-lg border border-white/5 relative">
+                        <button onClick={() => updateData("socials", data.socials.filter((_: any, idx: number) => idx !== i))} className="absolute top-2 right-2 text-red-500 hover:text-red-400"><Trash2 className="w-3 h-3" /></button>
+                        <div className="flex items-center gap-2 mb-2">
+                          {renderSocialIcon(social.platform, social.slug)}
+                          <span className="font-bold text-xs">{social.platform}</span>
+                        </div>
+                        <input type="text" value={social.platform} onChange={(e) => { const updated = [...data.socials]; updated[i].platform = e.target.value; updateData("socials", updated); }} placeholder="Nom" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs mb-2" />
+                        <input type="text" value={social.slug} onChange={(e) => { const updated = [...data.socials]; updated[i].slug = e.target.value.toLowerCase(); updateData("socials", updated); }} placeholder="Slug (ex: linkedin)" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs mb-2" />
+                        <input type="text" value={social.url} onChange={(e) => { const updated = [...data.socials]; updated[i].url = e.target.value; updateData("socials", updated); }} placeholder="URL (https://...)" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs" />
                       </div>
-                      <input type="text" value={social.platform} onChange={(e) => { const updated = [...data.socials]; updated[i].platform = e.target.value; updateData("socials", updated); }} placeholder="Nom" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs mb-2" />
-                      <input type="text" value={social.slug} onChange={(e) => { const updated = [...data.socials]; updated[i].slug = e.target.value.toLowerCase(); updateData("socials", updated); }} placeholder="Slug (ex: linkedin)" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs mb-2" />
-                      <input type="text" value={social.url} onChange={(e) => { const updated = [...data.socials]; updated[i].url = e.target.value; updateData("socials", updated); }} placeholder="URL (https://...)" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs" />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}

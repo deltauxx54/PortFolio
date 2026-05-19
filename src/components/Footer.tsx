@@ -7,6 +7,17 @@ interface FooterProps {
 }
 
 const FallbackIcon: React.FC<{ slug: string; platform: string }> = ({ slug, platform }) => {
+  const normalized = platform.toLowerCase().trim();
+  if (normalized === "linkedin") {
+    return <Linkedin className="w-5 h-5" />;
+  }
+  if (normalized === "github") {
+    return <Github className="w-5 h-5" />;
+  }
+  if (normalized === "twitter" || normalized === "x") {
+    return <Twitter className="w-5 h-5" />;
+  }
+
   const [error, setError] = React.useState(false);
   
   if (error || !slug) {

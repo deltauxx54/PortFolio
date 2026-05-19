@@ -259,12 +259,10 @@ function AppContent() {
     localStorage.setItem("portfolio_data", JSON.stringify(data));
   }, [data]);
 
-  // If there is no local saved data, try to load from remote API (VITE_API_BASE)
+  // Always load latest data from remote API on startup to bypass stale localStorage
   useEffect(() => {
     const loadRemote = async () => {
       try {
-        const saved = localStorage.getItem("portfolio_data");
-        if (saved) return; // prefer local edits
         const remote = await fetchPortfolio();
         if (remote) {
           setData((prev: any) => ({ ...prev, ...remote }));
